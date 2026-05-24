@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Tracking Delivery Order</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+</head>
+<body>
+    <div id="app" class="page-shell">
+      <nav class="page-nav">
+        <a href="index.html">Beranda</a>
+        <a href="stok.html">Stok Bahan Ajar</a>
+      </nav>
+
+      <header class="page-header">
+        <h1>Tracking Delivery Order</h1>
+        <p>Masukkan data pengiriman baru dan lihat daftar DO yang sedang diproses atau dikirim.</p>
+      </header>
+
+      <section class="panel">
+        <div class="form-grid">
+          <div class="form-group"><label>Nomor DO (Otomatis)</label><input type="text" :value="generatedDO" disabled></div>
+          <div class="form-group"><label>NIM</label><input type="text" v-model="formDO.nim"></div>
+          <div class="form-group"><label>Nama</label><input type="text" v-model="formDO.nama"></div>
+          <div class="form-group"><label>Ekspedisi</label>
+            <select v-model="formDO.ekspedisi">
+              <option value="">-- Pilih Ekspedisi --</option>
+              <option v-for="eks in pengirimanList" :value="eks.nama">{{ eks.kode }} - {{ eks.nama }}</option>
+            </select>
+          </div>
+          <div class="form-group"><label>Paket Bahan Ajar</label>
+            <select v-model="formDO.paketKode">
+              <option value="">-- Pilih Paket --</option>
+              <option v-for="pkt in paketList" :value="pkt.kode">{{ pkt.kode }} - {{ pkt.nama }}</option>
+            </select>
+          </div>
+          <div class="form-group"><label>Tanggal Kirim</label><input type="date" v-model="formDO.tanggalKirim"></div>
+        </div>
+
+        <div v-if="selectedPaketDetails" class="panel" style="background: #f3f7f9; margin-top: 1.5rem;">
+          <h2>Preview Paket</h2>
+          <p><strong>Isi Paket:</strong> <span v-html="selectedPaketDetails.isi.join(', ')"></span></p>
+          <p><strong>Total Harga:</strong> Rp {{ selectedPaketDetails.harga.toLocaleString('id-ID') }}</p>
+        </div>
+
+        <div style="margin-top: 1.5rem;">
+          <button class="btn" @click="simpanDO">Simpan DO Baru</button>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="page-header" style="padding: 1rem 1.2rem; margin: -2rem -1.8rem 1.5rem; background: transparent; box-shadow: none;">
+          <h2>Daftar Tracking DO</h2>
+          <p>Lihat status pengiriman, ekspedisi, dan detail paket dengan cepat.</p>
+        </div>
+
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Nomor DO</th>
+                <th>NIM</th>
+                <th>Nama</th>
+                <th>Status</th>
+                <th>Ekspedisi</th>
+                <th>Tanggal Kirim</th>
+                <th>Paket</th>
+                <th>Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(dataDO, nomorDO) in trackingData" :key="nomorDO">
+                <td>{{ nomorDO }}</td>
+                <td>{{ dataDO.nim }}</td>
+                <td>{{ dataDO.nama }}</td>
+                <td>
+                  <span class="status-chip" :class="dataDO.status === 'Dalam Perjalanan' ? 'menipis' : dataDO.status === 'Diproses' ? 'aman' : 'kosong'">
+                    {{ dataDO.status }}
+                  </span>
+                </td>
+                <td>{{ dataDO.ekspedisi }}</td>
+                <td>{{ dataDO.tanggalKirim }}</td>
+                <td>{{ dataDO.paket }}</td>
+                <td>Rp {{ dataDO.total.toLocaleString('id-ID') }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+    <script src="js/tracking-app.js"></script>
+</body>
+</html>

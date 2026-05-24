@@ -5,6 +5,11 @@ Nama  : Septian Triputra
 
 NIM   : 049841748
 
+## Project Setup
+
+```sh
+npm install
+```
 
 ### Untuk menjalankan proyek di terminal dengan perintah berikut
 
